@@ -22,7 +22,7 @@ import a00.database.Database;
 
 /**
  * @author Clara Fok, A00
- *
+ * Calls DAO to create the tables and add data to all three tables
  */
 public class TablesManager {
 
@@ -67,7 +67,7 @@ public class TablesManager {
 		
 		LOG.debug("Add data to all three tables");
 		
-		AllData.loadData();
+		AllData.loadData();  //parse data from csv files
 		
 		db = new Database();
 		customerDao = new CustomerDao(db);
@@ -142,15 +142,5 @@ public class TablesManager {
 
 	} 
 	
-//	public static Customer getCustomer(int customer_id) throws ApplicationException {
-//		db = new Database();
-//		customerDao = new CustomerDao(db);
-//		
-//		Customer c = customerDao.getCustomer(customer_id);
-//		
-//		return c;		
-//		
-//	}
-//	
 	
 }
