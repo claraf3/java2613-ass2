@@ -107,10 +107,10 @@ public class BookStore {
 			createUI(cdao, pdao, bdao, db);
 			
 			/*
-			 * check if tables exist in database 
-			 * if not, create tables and add data to tables
+			 * check if tables exist in database. If not, create tables and add data to tables. 
+			 * For the purposes of this project, all three tables would either be dropped or created simultaneously
 			 */
-			if(!db.tableExists(CUSTOMER_TABLE_NAME) || !db.tableExists(BOOK_TABLE_NAME) || !db.tableExists(PURCHASE_TABLE_NAME)) {
+			if(!db.tableExists(CUSTOMER_TABLE_NAME) && !db.tableExists(BOOK_TABLE_NAME) && !db.tableExists(PURCHASE_TABLE_NAME)) {
 				TablesManager.createAllTables();
 				TablesManager.addAllDataToTable();
 			}
