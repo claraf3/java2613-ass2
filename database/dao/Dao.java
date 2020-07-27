@@ -3,7 +3,7 @@ package a00.database.dao;
 
 /**
  * Abstract Dao
- * 
+ * Java file created by Sam Cirka. 
  * @author scirka
  *
  */
