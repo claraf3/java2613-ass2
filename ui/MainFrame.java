@@ -399,17 +399,24 @@ public class MainFrame extends JFrame {
 		listPurchase.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				ResultSet rs = downloadData(purchaseDao);
+				ResultSet rs = null;
+				
+				String sql = "SELECT A00957354_Customers.customer_id, A00957354_Customers.firstName, A00957354_Customers.lastName, A00957354_Books.original_title, price "
+						+ "FROM ((A00957354_Purchases "
+						+ "INNER JOIN A00957354_Customers ON A00957354_Purchases.customer_id = A00957354_Customers.customer_id)"
+						+ "INNER JOIN A00957354_Books ON A00957354_Purchases.book_id = A00957354_Books.book_id)";
+						
 				ArrayList<PurchaseDetailedData> purchaseList = new ArrayList<PurchaseDetailedData>();
 				
 				try {
+					rs = purchaseDao.makeQuery(sql);
 					while(rs.next()) {
 						PurchaseDetailedData p = new PurchaseDetailedData(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5));
 						purchaseList.add(p);
 						LOG.debug("added to purchase list: " + p);
 					}
 									
-				} catch (SQLException e1) {
+				} catch (SQLException | ApplicationException e1) {
 					LOG.error("Error while making query to join three tables", e1);
 					JOptionPane.showMessageDialog(MainFrame.this, "Error while downloading purchase data", "Error", 3);;
 				}
@@ -461,27 +468,5 @@ public class MainFrame extends JFrame {
 		helpMenu.add(about);
 	}
 
-	
-	//method to download data from the database by joining tables through id's
-	public ResultSet downloadData(PurchaseDao purchaseDao) {
-		
-		ResultSet rs = null;
-		
-		try {
-			
-			String sql = "SELECT A00957354_Customers.customer_id, A00957354_Customers.firstName, A00957354_Customers.lastName, A00957354_Books.original_title, price "
-						+ "FROM ((A00957354_Purchases "
-						+ "INNER JOIN A00957354_Customers ON A00957354_Purchases.customer_id = A00957354_Customers.customer_id)"
-						+ "INNER JOIN A00957354_Books ON A00957354_Purchases.book_id = A00957354_Books.book_id)";
-			
-			rs = purchaseDao.makeQuery(sql);
-			
-			
-		} catch (ApplicationException e2) {
-			LOG.error("Error while making query to join three tables", e2);
-			JOptionPane.showMessageDialog(MainFrame.this, "Failed to retrieve purchase details", "Warning", 2);
-		}
-		return rs;
-	}
 	
 }
