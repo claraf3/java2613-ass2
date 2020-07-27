@@ -22,7 +22,7 @@ import a00.database.Database;
 
 /**
  * @author Clara Fok, A00
- * Calls DAO to create the tables and add data to all three tables
+ * Manages the creation, insertion, and dropping for all three tables by calling DAO methods
  */
 public class TablesManager {
 
