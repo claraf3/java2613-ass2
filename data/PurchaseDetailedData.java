@@ -8,6 +8,7 @@ package a00.data;
 
 /**
  * @author Clara Fok, A00
+ * Creates object combining data from Customers, Book, and Purchases
  *
  */
 public class PurchaseDetailedData {
