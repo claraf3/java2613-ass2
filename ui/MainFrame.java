@@ -69,29 +69,6 @@ public class MainFrame extends JFrame {
 	}
 
 	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//
-//					Database db = new Database();
-//					db.getConnection();
-//					CustomerDao customerDao = new CustomerDao(db);
-//					BookDao bookDao = new BookDao(db);
-//					PurchaseDao purchaseDao = new PurchaseDao(db);
-//
-//					MainFrame frame = new MainFrame(customerDao, bookDao, purchaseDao);
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
 	 * Create the frame.
 	 */
 	public MainFrame(CustomerDao customerDao, BookDao bookDao, PurchaseDao purchaseDao, Database db) {
@@ -105,7 +82,8 @@ public class MainFrame extends JFrame {
 
 		buildMenu(customerDao, bookDao, purchaseDao, db);
 	}
-
+	
+	//builds menubar
 	public void buildMenu(CustomerDao customerDao, BookDao bookDao, PurchaseDao purchaseDao, Database db) {
 
 		menuBar = new JMenuBar();
@@ -119,7 +97,8 @@ public class MainFrame extends JFrame {
 		addHelpSubMenus();
 
 	}
-
+	
+	//add menus to menubar
 	public void addMenus(CustomerDao customerDao, BookDao bookDao, PurchaseDao purchaseDao) {
 		
 		// file menu
@@ -199,7 +178,7 @@ public class MainFrame extends JFrame {
 	// @param customerDao the dao to access customer table
 	public void addCustomerSubMenus(CustomerDao customerDao) {
 		LOG.debug("added submenu to Customer menu");
-		// Customers - add Count
+		//Counts number of customers in database
 		JMenuItem countCustomers = new JMenuItem("Count");
 		countCustomers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -221,13 +200,15 @@ public class MainFrame extends JFrame {
 		customerSortByJoinDate.setMnemonic('J');
 		customerMenu.add(customerSortByJoinDate);
 
-		// Customers - add list customers
+		// add action listener for user request to see list of customers
 		JMenuItem listCustomers = new JMenuItem("List");
 		listCustomers.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ArrayList<String> customerName = new ArrayList<String>();
 				ResultSet rs = null;
 				String sql = null;
+				
+				//sort customer by join date if check box for sort by join date is selected
 				if (customerSortByJoinDate.isSelected()) {
 					sql = String.format("SELECT %s, %s, %s " + "FROM %s " + "ORDER BY joinDate",
 							CustomerDao.Fields.CUSTOMER_ID.getName(), CustomerDao.Fields.FIRST_NAME.getName(), CustomerDao.Fields.JOIN_DATE.getName(),
@@ -278,7 +259,7 @@ public class MainFrame extends JFrame {
 	// @param bookDao the dao to access book table
 	public void addBookSubMenus(BookDao bookDao) {
 		LOG.debug("added submenu to Book menu");
-		// Books - add Count
+		// Count number of books in database
 		JMenuItem bookCount = new JMenuItem("Count");
 		bookCount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -296,18 +277,18 @@ public class MainFrame extends JFrame {
 		bookCount.setMnemonic('O');
 		bookMenu.add(bookCount);
 
-		// Books - add sort by author
+		// Books - checkbox to select sort by author
 		JCheckBoxMenuItem bookSortByAuthor = new JCheckBoxMenuItem("By Author");
 
 		bookSortByAuthor.setMnemonic('A');
 		bookMenu.add(bookSortByAuthor);
 
-		// Books - add sort descending
+		// Books - checkbox to select sort descending
 		JCheckBoxMenuItem bookSortByDescending = new JCheckBoxMenuItem("Descending");
 		bookSortByDescending.setMnemonic('D');
 		bookMenu.add(bookSortByDescending);
 
-		// Books - add list books
+		// Books - add action listener for user request to see list of books in database
 		JMenuItem listBooks = new JMenuItem("List");
 		listBooks.addActionListener(new ActionListener() {
 
@@ -315,7 +296,7 @@ public class MainFrame extends JFrame {
 				ResultSet rs;
 				String sql;
 				ArrayList<Book> books = new ArrayList<Book>();
-
+				//sort books based on user selections on checkboxes
 				if (bookSortByAuthor.isSelected()) {
 					if (bookSortByDescending.isSelected()) {
 						sql = String.format("SELECT * FROM %s ORDER BY %s DESC", BOOK_TABLE_NAME,
@@ -336,9 +317,7 @@ public class MainFrame extends JFrame {
 								.setImage_url(rs.getString(8)).build();
 						books.add(b);
 					}
-//					Book[] bookArr = new Book[books.size()];
-//					bookArr = books.toArray(bookArr);
-//					new BookList(bookArr);
+
 					new BookList(books);
 				} catch (ApplicationException e1) {
 					LOG.error(e1.getMessage(), e1);
@@ -375,22 +354,23 @@ public class MainFrame extends JFrame {
 		purchaseTotal.setMnemonic('T');
 		purchaseMenu.add(purchaseTotal);
 
-		// Purchase - add sort by last name
+		// Purchase - checkbox to select sort by last name
 		JCheckBoxMenuItem purchaseByLastName = new JCheckBoxMenuItem("By Last Name");
 		purchaseByLastName.setMnemonic('N');
 		purchaseMenu.add(purchaseByLastName);
 
-		// Purchase - add sort by title
+		// Purchase - checkbox to select sort by title
 		JCheckBoxMenuItem purchaseSortByTitle = new JCheckBoxMenuItem("By Title");
 		purchaseSortByTitle.setMnemonic('I');
 		purchaseMenu.add(purchaseSortByTitle);
 
-		// Purchase - add sort by descending
+		// Purchase - checkbox to select sort by descending
 		JCheckBoxMenuItem purchaseSortByDescending = new JCheckBoxMenuItem("Descending");
 		purchaseSortByDescending.setMnemonic('D');
 		purchaseMenu.add(purchaseSortByDescending);
 
-		// Purchase - add filter by customer ID
+		// Purchase - filters customer and purchase data by performing SQL query based on customer ID
+		// Returns data for indivdual customer
 		JMenuItem purchaseByCustomerId = new JMenuItem("Filter By Customer ID");
 		purchaseByCustomerId.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -413,7 +393,8 @@ public class MainFrame extends JFrame {
 		purchaseByCustomerId.setMnemonic('C');
 		purchaseMenu.add(purchaseByCustomerId);
 
-		// Purchase - add list purchases
+		// Purchase - add action listener for user request to get list of purchases
+		// Shows all purchase details by default unless filter by customer ID is set
 		JMenuItem listPurchase = new JMenuItem("List");
 		listPurchase.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -433,7 +414,7 @@ public class MainFrame extends JFrame {
 					JOptionPane.showMessageDialog(MainFrame.this, "Error while downloading purchase data", "Error", 3);;
 				}
 				
-				// sort purchase by last name
+				// sort purchase by last name if checkbox for sort by last name is selected
 				if (purchaseByLastName.isSelected()) {
 					if (purchaseSortByDescending.isSelected()) {
 						LOG.debug("sorting purchase list by last name descending order");
@@ -443,7 +424,7 @@ public class MainFrame extends JFrame {
 						purchaseList.sort((p1, p2) -> p1.getLastName().compareTo(p2.getLastName()));
 					}
 				}
-				// Sort purchase by title
+				// Sort purchase by title if checkbox for sort by title is selected
 				if (purchaseSortByTitle.isSelected()) {
 
 					if (purchaseSortByDescending.isSelected()) {
