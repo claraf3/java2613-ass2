@@ -35,7 +35,7 @@ public class AllData {
 		LOG = LogManager.getLogger(BookReport.class);
 	}
 	
-	//method to read all data files
+	//method to read all csv data files and return them in maps
 	public static void loadData() throws ApplicationException{
 		
 		LOG.debug("reading data files");
@@ -47,21 +47,21 @@ public class AllData {
 	}
 
 	/**
-	 * @return the books
+	 * @return the map of books
 	 */
 	public static Map<Integer, Book> getBooks() {
 		return books;
 	}
 
 	/**
-	 * @return the customers
+	 * @return the map of customers
 	 */
 	public static Map<Integer, Customer> getCustomers() {
 		return customers;
 	}
 
 	/**
-	 * @return the purchases
+	 * @return the map of purchases
 	 */
 	public static Map<Integer, Purchase> getPurchases() {
 		return purchases;
